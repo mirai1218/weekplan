@@ -35,6 +35,7 @@ class CriticAgent(BaseAgent):
 
         # 逐项检查
         _check_venue_open(nodes, intent, issues, suggestions)
+        _check_meal_time(nodes, issues, suggestions)
         _check_travel_time(nodes, issues, suggestions)
         _check_age_appropriate(nodes, intent, issues, suggestions)
         _check_dietary_fit(nodes, intent, issues, suggestions)
@@ -68,6 +69,35 @@ def _check_venue_open(nodes: list[dict], intent: dict, issues: list, suggestions
                     issues.append(f"'{node.get('title')}' 安排在 {time_start}，大部分场所已关门")
             except (ValueError, IndexError):
                 pass
+
+
+def _check_meal_time(nodes: list[dict], issues: list, suggestions: list):
+    """检查用餐时间是否在合理饭点"""
+    LUNCH_START, LUNCH_END = 10.5, 14.0    # 10:30-14:00 午餐/早午餐窗口
+    DINNER_START, DINNER_END = 17.0, 21.0   # 17:00-21:00 晚餐窗口
+
+    for node in nodes:
+        if node.get("category") != "dining":
+            continue
+        time_start = node.get("time_start", "")
+        if not time_start:
+            continue
+        try:
+            h, m = time_start.split(":")
+            t = int(h) + int(m) / 60
+        except (ValueError, IndexError):
+            continue
+
+        if LUNCH_START <= t <= LUNCH_END:
+            if t < 11.0:
+                suggestions.append(f"'{node.get('title', '用餐')}' 在 {time_start}，时间偏早，建议标注为「早午餐」")
+            continue
+        if DINNER_START <= t <= DINNER_END:
+            continue
+
+        title = node.get("title", node.get("venue_name", "用餐"))
+        issues.append(f"'{title}' 安排在 {time_start}，不在饭点（午餐/早午餐 10:30-14:00 / 晚餐 17:00-21:00）")
+        suggestions.append(f"建议将 '{title}' 移到合理饭点")
 
 
 def _check_travel_time(nodes: list[dict], issues: list, suggestions: list):

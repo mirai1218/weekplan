@@ -1,4 +1,4 @@
-"""WePlan 后端 — FastAPI 入口
+"""WeekPlan 后端 — FastAPI 入口
 
 核心 API：
 - POST /api/plan          — 创建新方案（SSE 流）
@@ -38,13 +38,13 @@ from backend.memory.session import session_store
 from backend.consensus.voting import create_vote_session, cast_vote, get_vote_results
 from backend.consensus.share_link import create_share_link, get_shared_plan
 from backend.tools import amap as amap_tools
-from backend.config import MAX_CRITIC_ROUNDS
+from backend.config import MAX_CRITIC_ROUNDS, DEFAULT_CITY
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s")
 logger = logging.getLogger("weplan.main")
 
 app = FastAPI(
-    title="WePlan API",
+    title="WeekPlan API",
     description="周末闲时活动规划 Agent — 美团 AI Hackathon 2026",
     version="1.0.0",
 )
@@ -63,7 +63,7 @@ app.add_middleware(
 
 class PlanRequest(BaseModel):
     input: str = Field(..., description="用户自然语言输入")
-    city: str = "杭州"
+    city: str = DEFAULT_CITY
     location: Optional[str] = None  # "lng,lat" from GPS
     session_id: Optional[str] = None
     user_id: str = "anonymous"
@@ -121,14 +121,27 @@ _plan_store: dict[str, dict] = {}
 # ────────────────── 核心流程 ──────────────────
 
 
-async def _run_pipeline(raw_input: str, session_id: str, city: str = "杭州"):
+async def _run_pipeline(raw_input: str, session_id: str, city: str = DEFAULT_CITY, location: Optional[str] = None):
     """主流水线：解析 → 环境 → 搜索 → 综合 → 校验 → 返回"""
+
+    # 如果有坐标，用逆地理编码推断城市
+    if location and location.strip():
+        try:
+            from backend.tools import amap as amap_tools
+            result = await amap_tools.regeo(location)
+            if result.success and result.data:
+                inferred_city = result.data.get("city", "")
+                if inferred_city:
+                    city = inferred_city
+                    logger.info(f"根据坐标 {location} 推断城市: {city}")
+        except Exception as e:
+            logger.warning(f"逆地理编码失败: {e}")
 
     # 1. Orchestrator — 意图解析
     yield _sse("agent_start", {"agent": "orchestrator", "status": "running"})
 
     orchestrator = OrchestratorAgent()
-    orch_result = await orchestrator.run(raw_input=raw_input)
+    orch_result = await orchestrator.run(raw_input=raw_input, city=city)
 
     if not orch_result.success:
         yield _sse("agent_complete", {"agent": "orchestrator", "success": False, "error": orch_result.error})
@@ -237,8 +250,52 @@ async def _run_pipeline(raw_input: str, session_id: str, city: str = "杭州"):
 
     session_store.update_session(session_id, plans=plans_data, state="plan_ready")
 
+    # 补全场馆坐标：从搜索结果中匹配 venue_name → location
+    _enrich_plan_locations(final_plans, dining_data, activity_data)
+
+    plans_data["plans"] = final_plans
     # 5. 输出最终方案
     yield _sse("plan_ready", plans_data)
+
+
+def _enrich_plan_locations(plans: list[dict], dining: dict, activity: dict):
+    """从搜索结果中补全场馆坐标，支持精确和模糊名称匹配"""
+    loc_map: dict[str, str] = {}
+    for r in dining.get("restaurants", []):
+        loc = r.get("location", "")
+        if loc:
+            loc_map[r.get("name", "")] = loc
+    for a in activity.get("activities", []):
+        loc = a.get("location", "")
+        if loc:
+            loc_map[a.get("name", "")] = loc
+
+    logger.info(f"_enrich_plan_locations: loc_map has {len(loc_map)} entries: {list(loc_map.keys())}")
+
+    if not loc_map:
+        logger.warning("_enrich_plan_locations: loc_map is empty, no coordinates to enrich")
+        return
+
+    for plan in plans:
+        for node in plan.get("nodes", []):
+            if node.get("venue_location"):
+                continue
+            name = node.get("venue_name", "")
+            if not name:
+                continue
+            # 1) 精确匹配
+            if name in loc_map:
+                node["venue_location"] = loc_map[name]
+                logger.info(f"  enriched (exact): '{name}' -> {loc_map[name]}")
+                continue
+            # 2) 模糊匹配：name 包含 key 或 key 包含 name
+            for k, v in loc_map.items():
+                if k and (k in name or name in k):
+                    node["venue_location"] = v
+                    logger.info(f"  enriched (fuzzy): '{name}' ~ '{k}' -> {v}")
+                    break
+            else:
+                logger.warning(f"  no match for venue_name: '{name}'")
 
 
 def _sse(event: str, data: Any) -> dict:
@@ -253,7 +310,41 @@ def _thought_text(t: dict) -> str:
         return str(t["content"])[:200]
     if "function" in t:
         return f"调用工具 {t['function']}({json.dumps(t.get('arguments', {}), ensure_ascii=False)[:100]})"
-    return json.dumps(t, ensure_ascii=False)[:200]
+
+    step = t.get("step", "")
+    if step == "parsed":
+        return "意图解析完成"
+    if step == "weather":
+        return "已获取天气数据"
+    if step == "weather_error":
+        return f"获取天气数据失败: {t.get('error', '')}"
+    if step == "search":
+        kw = t.get("keyword", "")
+        cnt = t.get("count", 0)
+        return f"搜索「{kw}」找到 {cnt} 个结果"
+    if step == "search_fail":
+        kw = t.get("keyword", "")
+        err = t.get("error", "")
+        return f"搜索「{kw}」失败: {err}"
+    if step == "plans_created":
+        cnt = t.get("count", 0)
+        return f"已生成 {cnt} 个备选方案"
+    if step == "done":
+        if "passed" in t:
+            if t["passed"]:
+                return "方案校验通过"
+            return f"发现 {t.get('issue_count', 0)} 个问题"
+        if "context" in t:
+            return "环境数据收集完成"
+        if "intent" in t:
+            return "意图解析完成"
+        if "plan_count" in t:
+            return f"方案生成完成，共 {t.get('plan_count', 0)} 个"
+        if "count" in t:
+            return f"推荐完成，共 {t.get('count', 0)} 个，方案生成中…"
+        return ""   # 无意义的 done，不在聊天框显示
+
+    return "处理中…"
 
 
 # ────────────────── API 路由 ──────────────────
@@ -268,7 +359,7 @@ async def create_plan(req: PlanRequest):
     async def event_generator():
         yield _sse("session", {"session_id": session_id})
         try:
-            async for event in _run_pipeline(req.input, session_id, city=req.city):
+            async for event in _run_pipeline(req.input, session_id, city=req.city, location=req.location):
                 yield event
         except Exception as e:
             logger.error("Pipeline error: %s\n%s", e, traceback.format_exc())
@@ -566,7 +657,7 @@ async def api_get_share(share_id: str):
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "service": "WePlan", "version": "1.0.0"}
+    return {"status": "ok", "service": "WeekPlan", "version": "1.0.0"}
 
 
 @app.get("/api/locate")
@@ -585,7 +676,7 @@ async def api_locate(request: Request):
     except Exception as e:
         logger.warning("IP locate error: %s", e)
 
-    return {"city": "杭州", "location": "120.153576,30.287459"}
+    return {"city": DEFAULT_CITY, "location": "120.153576,30.287459"}
 
 
 # ────────────────── 启动入口 ──────────────────

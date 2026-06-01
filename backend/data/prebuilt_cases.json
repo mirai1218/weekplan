@@ -1,16 +1,16 @@
 [
   {
     "id": "case_hz_family_sunny",
-    "title": "杭州 · 家庭温馨半日游",
+    "title": "家庭温馨半日游",
     "subtitle": "5岁萌娃 + 减肥妈妈的完美下午",
-    "city": "杭州",
+    "city": "成都",
     "scene_type": "family",
     "weather": "sunny",
     "cover_emoji": "family",
     "input": "今天下午空的，想和老婆孩子出去玩几小时，孩子5岁，老婆在减肥，别离家太远",
     "intent": {
       "scene_type": "family",
-      "city": "杭州",
+      "city": "成都",
       "group_size": 3,
       "group_composition": [
         "adult_male",
@@ -49,7 +49,7 @@
         "status": "complete",
         "duration_ms": 620,
         "thoughts": [
-          "查询天气：杭州今日晴，28°C，适合户外",
+          "查询天气：成都今日晴，28°C，适合户外",
           "当前时间14:00，日落约18:30，户外活动时间充裕",
           "定位用户在城西，推荐城西/西湖周边场所",
           "今日非节假日，各景点预计不拥挤"
@@ -233,7 +233,7 @@
             "time": "14:20",
             "duration_min": 100,
             "type": "activity",
-            "title": "浙江自然博物院(杭州馆)",
+            "title": "浙江自然博物院(成都馆)",
             "subtitle": "恐龙化石 · 4.7分 · 免费",
             "cost": "0",
             "venue_id": "hz_act_009",
@@ -411,16 +411,16 @@
   },
   {
     "id": "case_hz_friends_sunny",
-    "title": "杭州 · 周末好友畅玩日",
+    "title": "周末好友畅玩日",
     "subtitle": "4人小队的6小时精彩周末",
-    "city": "杭州",
+    "city": "成都",
     "scene_type": "friends",
     "weather": "sunny",
     "cover_emoji": "friends",
     "input": "周六下午，4个人，2男2女，想玩6小时，预算人均200",
     "intent": {
       "scene_type": "friends",
-      "city": "杭州",
+      "city": "成都",
       "group_size": 4,
       "group_composition": [
         "adult_male",
@@ -457,7 +457,7 @@
         "status": "complete",
         "duration_ms": 550,
         "thoughts": [
-          "周六杭州晴天，25°C，适合户外活动",
+          "周六成都晴天，25°C，适合户外活动",
           "周末热门景点可能人多，避开西湖核心区",
           "推荐文艺+美食路线，拍照需求较高",
           "6小时跨下午到傍晚，需考虑晚餐"
@@ -852,16 +852,16 @@
   },
   {
     "id": "case_hz_family_rainy",
-    "title": "杭州 · 雨天室内亲子日",
+    "title": "雨天室内亲子日",
     "subtitle": "下雨也不怕的亲子好去处",
-    "city": "杭州",
+    "city": "成都",
     "scene_type": "family",
     "weather": "rainy",
     "cover_emoji": "umbrella",
     "input": "今天下雨了，带5岁孩子找个室内的地方玩，顺便吃个饭",
     "intent": {
       "scene_type": "family",
-      "city": "杭州",
+      "city": "成都",
       "group_size": 3,
       "group_composition": [
         "adult_male",
@@ -899,7 +899,7 @@
         "status": "complete",
         "duration_ms": 480,
         "thoughts": [
-          "杭州今日中雨，气温22°C",
+          "成都今日中雨，气温22°C",
           "雨天交通拥堵，建议减少跨区移动",
           "推荐商场/综合体一站式方案",
           "室内场所人流量可能增大"
@@ -980,7 +980,7 @@
             "time": "14:25",
             "duration_min": 150,
             "type": "activity",
-            "title": "杭州极地海洋公园",
+            "title": "成都极地海洋公园",
             "subtitle": "海豚表演 · 4.5分 · 企鹅馆",
             "cost": "150",
             "venue_id": "hz_act_002",
@@ -1122,7 +1122,7 @@
         ]
       }
     ],
-    "share_message": "下雨天也有好去处！\n🐬 14:25 杭州极地海洋公园看海豚\n🍽️ 17:10 哺哺亲子餐厅吃晚饭\n💰 总花费约528元\n\n全程室内不淋雨，已订好车和餐厅位，带好雨伞出发！",
+    "share_message": "下雨天也有好去处！\n🐬 14:25 成都极地海洋公园看海豚\n🍽️ 17:10 哺哺亲子餐厅吃晚饭\n💰 总花费约528元\n\n全程室内不淋雨，已订好车和餐厅位，带好雨伞出发！",
     "execution_summary": {
       "taxi_booked": true,
       "tickets_bought": true,
@@ -1132,16 +1132,16 @@
   },
   {
     "id": "case_bj_family_sunny",
-    "title": "北京 · 科技少年半日游",
+    "title": "科技少年半日游",
     "subtitle": "6岁小科学家的探索下午",
-    "city": "北京",
+    "city": "成都",
     "scene_type": "family",
     "weather": "sunny",
     "cover_emoji": "rocket",
     "input": "周六带孩子出去玩，孩子6岁，对科技感兴趣，下午半天",
     "intent": {
       "scene_type": "family",
-      "city": "北京",
+      "city": "成都",
       "group_size": 3,
       "group_composition": [
         "adult_male",
@@ -1171,7 +1171,7 @@
           "解析到家庭场景：带6岁科技迷孩子",
           "核心需求：科技相关活动，互动体验",
           "下午半天约4小时，需要紧凑安排",
-          "北京科技资源丰富：中国科技馆、天文馆、自然博物馆"
+          "成都科技资源丰富：中国科技馆、天文馆、自然博物馆"
         ]
       },
       {
@@ -1179,7 +1179,7 @@
         "status": "complete",
         "duration_ms": 580,
         "thoughts": [
-          "周六北京晴天，30°C，户外偏热",
+          "周六成都晴天，30°C，户外偏热",
           "科技馆周六人流量大，建议早到",
           "奥森公园在科技馆附近，可串联",
           "交通：地铁8号线直达奥林匹克公园"
@@ -1467,7 +1467,7 @@
             "time": "13:55",
             "duration_min": 100,
             "type": "activity",
-            "title": "北京天文馆",
+            "title": "成都天文馆",
             "subtitle": "4D球幕电影 · 4.6分 · 星空体验",
             "cost": 45,
             "venue_id": "bj_act_003",
@@ -1491,7 +1491,7 @@
             "time": "15:40",
             "duration_min": 90,
             "type": "activity",
-            "title": "北京动物园(大熊猫馆)",
+            "title": "成都动物园(大熊猫馆)",
             "subtitle": "看国宝 · 4.6分 · 孩子最爱",
             "cost": 55,
             "venue_id": "bj_act_005",
@@ -1516,7 +1516,7 @@
             "duration_min": 70,
             "type": "dining",
             "title": "京味斋(西直门店)",
-            "subtitle": "老北京菜 · 4.3分 · 炸酱面",
+            "subtitle": "老成都菜 · 4.3分 · 炸酱面",
             "cost": 245,
             "venue_id": "bj_rest_006",
             "status": "reserved",
@@ -1547,16 +1547,16 @@
   },
   {
     "id": "case_bj_friends_sunny",
-    "title": "北京 · 文艺青年周末漫游",
+    "title": "文艺青年周末漫游",
     "subtitle": "4个文艺青年的300元品质之旅",
-    "city": "北京",
+    "city": "成都",
     "scene_type": "friends",
     "weather": "sunny",
     "cover_emoji": "art",
     "input": "4个朋友周末下午出来逛逛，喜欢文艺的地方，预算人均300",
     "intent": {
       "scene_type": "friends",
-      "city": "北京",
+      "city": "成都",
       "group_size": 4,
       "group_composition": [
         "adult",
@@ -1589,7 +1589,7 @@
           "解析到朋友场景：4人文艺聚会",
           "核心标签：文艺、展览、有氛围",
           "预算人均300偏宽裕，可安排品质活动",
-          "北京文艺地标丰富：798、什刹海、南锣、五道营"
+          "成都文艺地标丰富：798、什刹海、南锣、五道营"
         ]
       },
       {
@@ -1597,7 +1597,7 @@
         "status": "complete",
         "duration_ms": 560,
         "thoughts": [
-          "周末北京晴天，26°C，户外很舒适",
+          "周末成都晴天，26°C，户外很舒适",
           "798周末有多个新展开幕",
           "什刹海傍晚最美，建议安排到后半段",
           "南锣+五道营可串联，步行可达"
@@ -1633,7 +1633,7 @@
         "duration_ms": 880,
         "thoughts": [
           "方案A：798艺术区全天 → 当代艺术爱好者首选",
-          "方案B：什刹海环湖CityWalk → 老北京韵味+湖景",
+          "方案B：什刹海环湖CityWalk → 老成都韵味+湖景",
           "方案C：南锣+前门胡同漫游 → 京味文化体验"
         ]
       },
@@ -1644,7 +1644,7 @@
         "thoughts": [
           "方案A最文艺，但798位置偏东北",
           "方案B景色最好，日落什刹海很美",
-          "方案C最有北京味，但南锣周末人多",
+          "方案C最有成都味，但南锣周末人多",
           "三方案均在预算内，推荐A为文艺首选"
         ]
       }
@@ -1892,7 +1892,7 @@
       },
       {
         "id": "plan_c",
-        "name": "南锣+前门 · 老北京文化之旅",
+        "name": "南锣+前门 · 老成都文化之旅",
         "style": "文化型",
         "total_cost": 860,
         "total_duration_hours": 5.0,
@@ -2025,9 +2025,9 @@
   },
   {
     "id": "case_hz_dynamic_adjust",
-    "title": "杭州 · 实时调整的亲子计划",
+    "title": "实时调整的亲子计划",
     "subtitle": "看AI如何灵活应对需求变化",
-    "city": "杭州",
+    "city": "成都",
     "scene_type": "family",
     "weather": "sunny",
     "cover_emoji": "sparkles",
@@ -2038,7 +2038,7 @@
         "input": "帮我安排周六下午的亲子活动",
         "intent": {
           "scene_type": "family",
-          "city": "杭州",
+          "city": "成都",
           "group_size": 3,
           "duration_hours": 4,
           "time_start": "14:00",

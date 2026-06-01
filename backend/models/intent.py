@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field
 from typing import Optional
 from enum import Enum
+from pydantic import BaseModel, Field
 
 
 class SceneType(str, Enum):
@@ -19,9 +19,9 @@ class UserIntent(BaseModel):
     duration_hours: float = 4.0
     budget_per_person: Optional[int] = None
     child_age: Optional[int] = None
-    dietary_requirements: list[str] = Field(default_factory=list)
-    interests: list[str] = Field(default_factory=list)
+    dietary_requirements: Optional[list[str]] = Field(default_factory=list)
+    interests: Optional[list[str]] = Field(default_factory=list)
     start_time: str = "14:00"
-    special_requests: list[str] = Field(default_factory=list)
+    special_requests: Optional[list[str]] = Field(default_factory=list)
     location: Optional[str] = None
     raw_input: str = ""

@@ -28,8 +28,11 @@ class OrchestratorAgent(BaseAgent):
                 return json.dumps({"status": "ok", "message": "意图已解析"}, ensure_ascii=False)
             return json.dumps({"error": f"未知工具: {fn_name}"}, ensure_ascii=False)
 
+        # 使用 GPS 推断的城市替代默认"杭州"
+        city = kwargs.get("city", DEFAULT_CITY)
+        system_content = ORCHESTRATOR_PROMPT.replace("默认杭州", f"默认{city}")
         messages = [
-            {"role": "system", "content": ORCHESTRATOR_PROMPT},
+            {"role": "system", "content": system_content},
             {"role": "user", "content": raw_input},
         ]
 
@@ -52,15 +55,15 @@ class OrchestratorAgent(BaseAgent):
 
         intent = UserIntent(
             scene_type=SceneType(scene_type),
-            city=parsed_data.get("city", DEFAULT_CITY),
-            group_size=parsed_data.get("group_size", 2),
-            duration_hours=parsed_data.get("duration_hours", 4.0),
+            city=parsed_data.get("city") or DEFAULT_CITY,
+            group_size=parsed_data.get("group_size") or 2,
+            duration_hours=parsed_data.get("duration_hours") or 4.0,
             budget_per_person=parsed_data.get("budget_per_person"),
             child_age=parsed_data.get("child_age"),
-            dietary_requirements=parsed_data.get("dietary_requirements", []),
-            interests=parsed_data.get("interests", []),
-            start_time=parsed_data.get("start_time", "14:00"),
-            special_requests=parsed_data.get("special_requests", []),
+            dietary_requirements=parsed_data.get("dietary_requirements") or [],
+            interests=parsed_data.get("interests") or [],
+            start_time=parsed_data.get("start_time") or "14:00",
+            special_requests=parsed_data.get("special_requests") or [],
             location=parsed_data.get("location"),
             raw_input=raw_input,
         )

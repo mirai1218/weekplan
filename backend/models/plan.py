@@ -49,7 +49,7 @@ class Plan(BaseModel):
     title: str = ""
     summary: str = ""
     nodes: list[PlanNode] = Field(default_factory=list)
-    total_cost_per_person: float = 0.0
+    total_cost_per_person: Optional[float] = None
     total_duration_hours: float = 0.0
     score: PlanScore = Field(default_factory=PlanScore)
     highlight: str = ""      # 方案亮点一句话

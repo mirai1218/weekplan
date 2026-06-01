@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WePlan · AI 周末生活规划师</title>
+  <title>WeekPlan · AI 周末生活规划师</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=20260517d">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗓</text></svg>">
   <script>window._AMapSecurityConfig = { securityJsCode: "d57dafc6b387f85f5ef1240ec33664fd" };</script>
@@ -13,7 +16,7 @@
   <!-- ====== Top Navbar ====== -->
   <nav class="navbar" id="navbar">
     <div class="navbar-left">
-      <span class="brand-logo">🗓 WePlan</span>
+      <span class="brand-logo">🗓 WeekPlan</span>
       <span class="city-badge" id="locationDisplay">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
         <span id="cityLabel">定位中...</span>
@@ -45,16 +48,15 @@
         <!-- Welcome -->
         <div class="welcome-block" id="welcomeBlock">
           <div class="welcome-avatar">🗓</div>
-          <h2 class="welcome-title">你好，我是 WePlan</h2>
+          <h2 class="welcome-title">你好，我是 WeekPlan</h2>
           <p class="welcome-subtitle">你的 AI 周末生活规划师。告诉我你的周末想怎么过，我来帮你安排！</p>
 
           <div class="preset-prompts" id="presetPrompts">
-            <button class="prompt-bubble" data-prompt="今天下午带娃出去玩，孩子5岁，老婆在减肥">🎪 今天下午带娃出去玩，孩子5岁，老婆在减肥</button>
             <button class="prompt-bubble" data-prompt="周六4个朋友聚一聚，吃喝玩乐来点新奇的">🎉 周六4个朋友聚一聚，吃喝玩乐来点新奇的</button>
             <button class="prompt-bubble" data-prompt="和女朋友约会，找个浪漫有氛围的地方">💑 和女朋友约会，找个浪漫有氛围的地方</button>
             <button class="prompt-bubble" data-prompt="一个人想找个安静地方待一会儿">🧘 一个人想找个安静地方待一会儿</button>
             <button class="prompt-bubble" data-prompt="下雨了，找个室内活动">🌧️ 下雨了，找个室内活动</button>
-            <button class="prompt-bubble" data-prompt="在北京，想来个文化探索日">🏛️ 在北京，想来个文化探索日</button>
+            <button class="prompt-bubble" data-prompt="来个文化探索日，逛博物馆看展览">🏛️ 来个文化探索日，逛博物馆看展览</button>
           </div>
         </div>
 
@@ -64,6 +66,13 @@
 
       <!-- Input bar -->
       <div class="input-bar" id="inputBar">
+        <div class="time-slots" id="timeSlots">
+          <button class="time-chip" data-time="9:00" data-prefix="上午9点出发，">☀️ 上午<span class="time">9:00</span></button>
+          <button class="time-chip" data-time="12:00" data-prefix="中午12点出发，">🌤 中午<span class="time">12:00</span></button>
+          <button class="time-chip" data-time="14:00" data-prefix="下午2点出发，">🌅 下午<span class="time">14:00</span></button>
+          <button class="time-chip" data-time="17:00" data-prefix="傍晚5点出发，">🌆 傍晚<span class="time">17:00</span></button>
+          <button class="time-chip" data-time="19:00" data-prefix="晚上7点出发，">🌙 晚上<span class="time">19:00</span></button>
+        </div>
         <div class="input-wrapper">
           <input type="text" class="chat-input" id="chatInput" placeholder="说说你想怎么过周末..." autocomplete="off">
           <button class="mic-btn" id="micBtn" title="语音输入">
@@ -71,6 +80,9 @@
           </button>
           <button class="send-btn" id="sendBtn" title="发送">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
+          <button class="stop-btn" id="stopBtn" title="停止生成" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
           </button>
         </div>
       </div>
@@ -194,7 +206,7 @@
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
-  <script src="https://webapi.amap.com/maps?v=2.0&key=e2b1bc957debb654563f44988a93440f&plugin=AMap.Scale,AMap.Driving,AMap.Transfer,AMap.Walking,AMap.Geocoder"></script>
-  <script src="app.js?v=20260517d"></script>
+  <script src="https://webapi.amap.com/maps?v=2.0&key=dfba95facc063629487625ae2cf36002&plugin=AMap.Scale,AMap.Driving,AMap.Transfer,AMap.Walking,AMap.Geocoder"></script>
+  <script src="app.js?v=20260526d"></script>
 </body>
 </html>

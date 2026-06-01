@@ -290,3 +290,33 @@ async def _raw_ip_locate(ip: str = "") -> dict:
 
 async def ip_locate(ip: str = "") -> ToolResult:
     return await _ip_harness.execute(_raw_ip_locate, ip, cache_key=f"ip_{ip}")
+
+
+# ────────────────────── 逆地理编码 (坐标→城市) ──────────────────────
+
+_regeo_harness = ToolHarness("amap_regeo")
+
+
+async def _raw_regeo(location: str) -> dict:
+    http = _get_http()
+    resp = await http.get(
+        f"{AMAP_BASE_URL}/geocode/regeo",
+        params={"key": AMAP_API_KEY, "location": location, "extensions": "base"},
+    )
+    data = resp.json()
+    if data.get("status") == "1" and data.get("regeocode"):
+        addr = data["regeocode"]["addressComponent"]
+        province = addr.get("province", "")
+        city = addr.get("city", "")
+        if not city:
+            city = province
+        return {
+            "city": city.replace("市", "") if city else (province.replace("市", "") if province else "杭州"),
+            "province": province,
+            "district": addr.get("district", ""),
+        }
+    raise ValueError(f"逆地理编码失败: {data}")
+
+
+async def regeo(location: str) -> ToolResult:
+    return await _regeo_harness.execute(_raw_regeo, location, cache_key=f"regeo_{location}")

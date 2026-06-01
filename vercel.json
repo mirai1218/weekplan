@@ -1,0 +1,11 @@
+{
+  "framework": "static",
+  "buildCommand": "echo 'static site - no build needed'",
+  "outputDirectory": "frontend/demo",
+  "redirects": [
+    { "source": "/api/:path+", "destination": "http://121.41.74.45/api/:path+" }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
+}

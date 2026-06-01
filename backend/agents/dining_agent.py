@@ -34,7 +34,7 @@ class DiningAgent(BaseAgent):
 
         # 搜索多个关键词
         for kw in keywords:
-            result = await search_poi(keyword=kw, city=city)
+            result = await search_poi(keyword=kw, city=city, category="餐饮服务")
             if result.success and result.data:
                 thinking.append({"step": "search", "keyword": kw, "count": len(result.data), "source": result.source})
                 all_restaurants.extend(result.data)
@@ -125,6 +125,18 @@ async def _rank_restaurants(restaurants: list[dict], intent: dict, context: dict
         ranked = json.loads(content)
         if isinstance(ranked, list):
             thinking.append({"step": "rank", "message": "LLM 排序完成"})
+            # 从原始数据恢复 location 字段（LLM 可能丢失或改变坐标）
+            orig_map = {r.get("name", ""): r for r in restaurants}
+            for item in ranked:
+                name = item.get("name", "")
+                orig = orig_map.get(name)
+                if orig:
+                    if not item.get("location"):
+                        item["location"] = orig.get("location", "")
+                    if not item.get("tel"):
+                        item["tel"] = orig.get("tel", "")
+                    if not item.get("address"):
+                        item["address"] = orig.get("address", "")
             return ranked
     except Exception as e:
         thinking.append({"step": "rank_error", "error": str(e)})
