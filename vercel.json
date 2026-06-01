@@ -1,7 +1,7 @@
 {
-  "framework": "static",
-  "buildCommand": "echo 'static site - no build needed'",
+  "buildCommand": "echo 'no build needed'",
   "outputDirectory": "frontend/demo",
+  "installCommand": "echo 'no dependencies'",
   "redirects": [
     { "source": "/api/:path+", "destination": "http://121.41.74.45/api/:path+" }
   ],
