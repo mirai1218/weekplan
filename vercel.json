@@ -3,7 +3,7 @@
   "outputDirectory": "frontend/demo",
   "installCommand": "echo 'no dependencies'",
   "redirects": [
-    { "source": "/api/:path+", "destination": "http://121.41.74.45/api/:path+" }
+    { "source": "/api/:path+", "destination": "https://weekplan-production.up.railway.app/api/:path+" }
   ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/$1" }
